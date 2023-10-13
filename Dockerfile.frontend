@@ -1,0 +1,26 @@
+FROM rust:latest AS build-env
+
+WORKDIR /app
+
+# Install dependencies
+RUN rustup target add wasm32-unknown-unknown
+RUN cargo install --locked trunk
+
+COPY . /app
+
+RUN cargo test -p frontend
+
+WORKDIR /app/frontend
+RUN trunk build --release
+
+FROM nginx:stable-alpine AS final
+
+# Copy built source files to static directory
+COPY --from=build-env /app/frontend/dist /usr/share/nginx/html
+
+# Copy config template to template directory
+COPY --from=build-env ./frontend/nginx/templates /etc/nginx/templates/
+
+ENV NGINX_PORT=80 \
+  NGINX_SERVER_NAME=docker-frontend \
+  BACKEND_HOST=localhost:3000

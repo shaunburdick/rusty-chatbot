@@ -1,0 +1,23 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker compose reference guide at
+# https://docs.docker.com/compose/compose-file/
+
+services:
+  backend:
+    image: shaunburdick/rust-playground/backend
+    build:
+      context: .
+      dockerfile: ./Dockerfile.backend
+      target: final
+    ports:
+      - 3000:3000
+  frontend:
+    image: shaunburdick/rust-playground/frontend
+    build:
+      context: .
+      dockerfile: ./Dockerfile.frontend
+      target: final
+    ports:
+      - 8080:80
+    environment:
+      - BACKEND_HOST=backend:3000
