@@ -3,6 +3,7 @@ use std::str::FromStr;
 use models::{Voice, Conversation, Message, Author};
 use sqlx::{sqlite::{SqlitePool, SqliteRow}, Error, Row};
 
+#[derive(Clone)]
 pub struct DB {
     pool: SqlitePool,
 }
