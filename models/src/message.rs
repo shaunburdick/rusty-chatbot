@@ -1,11 +1,11 @@
 use std::str::FromStr;
 
 use chrono::Utc;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use strum::Display;
 use uuid::Uuid;
 
-#[derive(PartialEq, Eq, Debug, Clone, Display, Serialize)]
+#[derive(PartialEq, Eq, Debug, Clone, Display, Serialize, Deserialize)]
 #[strum(serialize_all = "lowercase")]
 
 pub enum Author {
@@ -26,7 +26,7 @@ impl FromStr for Author {
 }
 
 
-#[derive(PartialEq, Eq, Debug, Clone, Serialize)]
+#[derive(PartialEq, Eq, Debug, Clone, Serialize, Deserialize)]
 /// A message is a bit of text as part of the conversation
 pub struct Message {
     /// ID of the message

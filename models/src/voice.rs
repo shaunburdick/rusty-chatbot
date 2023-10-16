@@ -1,8 +1,8 @@
 use chrono::Utc;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(PartialEq, Eq, Debug, Clone, Serialize)]
+#[derive(PartialEq, Eq, Debug, Clone, Serialize, Deserialize)]
 /// A voice is a description of the responder in the conversation
 pub struct Voice {
     /// ID of the voice

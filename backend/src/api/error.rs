@@ -1,8 +1,9 @@
 use actix_web::{ResponseError, HttpResponse, http::StatusCode};
 use serde::Deserialize;
-use serde_json::json;
 use std::fmt;
 use sqlx::Error as SqlxError;
+
+use super::response::JsonApiResponse;
 
 #[derive(Debug, Deserialize)]
 pub struct HttpError {
@@ -11,6 +12,11 @@ pub struct HttpError {
 }
 
 impl HttpError {
+    /// Helper factory function to create a new HttpError
+    ///
+    /// Arguments:
+    /// - status_code: The HTTP status code to return
+    /// - message: The message for the user describing the error
     pub fn new(status_code: u16, message: String) -> HttpError {
         HttpError {
             status_code,
@@ -25,6 +31,7 @@ impl fmt::Display for HttpError {
     }
 }
 
+// Convert an SqlxError into an HttpError
 impl From<SqlxError> for HttpError {
     fn from(error: SqlxError) -> HttpError {
         match error {
@@ -38,6 +45,7 @@ impl From<SqlxError> for HttpError {
     }
 }
 
+// Implement the ResponseError trait to generate a JSON API response
 impl ResponseError for HttpError {
     fn error_response(&self) -> HttpResponse {
         let status_code = match StatusCode::from_u16(self.status_code) {
@@ -50,6 +58,7 @@ impl ResponseError for HttpError {
             false => "Internal server error".to_string(),
         };
 
-        HttpResponse::build(status_code).json(json!({ "message": error_message }))
+        HttpResponse::build(status_code)
+            .json(JsonApiResponse::<String>::error(vec![error_message], None))
     }
 }

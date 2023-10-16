@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use chrono::Utc;
 use models::{Voice, Conversation, Message, Author};
 use sqlx::{sqlite::{SqlitePool, SqliteRow}, Error, Row};
 
@@ -150,6 +151,27 @@ impl DB {
         Ok(rows_affected == 1)
     }
 
+    /// Set the deleted_at timestamp for a voice
+    ///
+    /// Arguments:
+    /// - voice_id: The id of the voice to "delete"
+    pub async fn delete_voice(&self, voice_id: &String) -> Result<bool, Error> {
+        let mut connection = self.pool.acquire().await?;
+
+        let rows_affected = sqlx::query(r#"
+            UPDATE `voice`
+            SET `deleted_at` = ?1
+            WHERE `id` = ?2
+        "#)
+        .bind(Utc::now().timestamp())
+        .bind(voice_id)
+        .execute(&mut *connection)
+        .await?
+        .rows_affected();
+
+        Ok(rows_affected == 1)
+    }
+
     /// Fetches conversations from database
     ///
     /// Arguments:
@@ -223,6 +245,27 @@ impl DB {
         Ok(rows_affected == 1)
     }
 
+    /// Set the deleted_at timestamp for a conversation
+    ///
+    /// Arguments:
+    /// - conversation_id: The id of the conversation to "delete"
+    pub async fn delete_conversation(&self, conversation_id: &String) -> Result<bool, Error> {
+        let mut connection = self.pool.acquire().await?;
+
+        let rows_affected = sqlx::query(r#"
+            UPDATE `conversation`
+            SET `deleted_at` = ?1
+            WHERE `id` = ?2
+        "#)
+        .bind(Utc::now().timestamp())
+        .bind(conversation_id)
+        .execute(&mut *connection)
+        .await?
+        .rows_affected();
+
+        Ok(rows_affected == 1)
+    }
+
     /// Fetches messages from database
     ///
     /// Arguments:
@@ -289,6 +332,48 @@ impl DB {
         .bind(&message.content)
         .bind(&message.created_at)
         .bind(&message.deleted_at)
+        .execute(&mut *connection)
+        .await?
+        .rows_affected();
+
+        Ok(rows_affected == 1)
+    }
+
+    /// Set the deleted_at timestamp for a message
+    ///
+    /// Arguments:
+    /// - message_id: The id of the message to "delete"
+    pub async fn delete_message(&self, message_id: &String) -> Result<bool, Error> {
+        let mut connection = self.pool.acquire().await?;
+
+        let rows_affected = sqlx::query(r#"
+            UPDATE `message`
+            SET `deleted_at` = ?1
+            WHERE `id` = ?2
+        "#)
+        .bind(Utc::now().timestamp())
+        .bind(message_id)
+        .execute(&mut *connection)
+        .await?
+        .rows_affected();
+
+        Ok(rows_affected == 1)
+    }
+
+    /// Set the deleted_at timestamp for all messages in a conversation
+    ///
+    /// Arguments:
+    /// - conversation_id: The id of the conversation to "delete" messages for
+    pub async fn delete_messages_by_conversation(&self, conversation_id: &String) -> Result<bool, Error> {
+        let mut connection = self.pool.acquire().await?;
+
+        let rows_affected = sqlx::query(r#"
+            UPDATE `message`
+            SET `deleted_at` = ?1
+            WHERE `conversation_id` = ?2
+        "#)
+        .bind(Utc::now().timestamp())
+        .bind(conversation_id)
         .execute(&mut *connection)
         .await?
         .rows_affected();
