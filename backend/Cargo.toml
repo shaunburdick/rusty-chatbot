@@ -8,7 +8,9 @@ edition = "2021"
 [dependencies]
 actix-web = "4"
 chrono = "0.4.31"
+dotenv = "0.15.0"
 env_logger = "0.10.0"
+llm = "0.1.1"
 models = { path = "../models" }
 sqlx = { version = "0.7.2", features = ["sqlite", "sqlx-sqlite", "runtime-tokio"] }
 tokio = { version = "1.33.0", features = ["test-util", "macros"] }
