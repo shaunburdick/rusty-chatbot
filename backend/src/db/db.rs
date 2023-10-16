@@ -222,7 +222,6 @@ impl DB {
         Ok(rows_affected == 1)
     }
 
-
     /// Fetches messages from database
     ///
     /// Arguments:
