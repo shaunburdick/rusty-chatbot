@@ -5,6 +5,9 @@ WORKDIR /app
 # Install dependencies
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo install --locked trunk
+RUN wget https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64; \
+    chmod +x tailwindcss-linux-x64; \
+    mv tailwindcss-linux-x64 /bin/tailwindcss
 
 COPY . /app
 
@@ -19,7 +22,7 @@ FROM nginx:stable-alpine AS final
 COPY --from=build-env /app/frontend/dist /usr/share/nginx/html
 
 # Copy config template to template directory
-COPY --from=build-env ./frontend/nginx/templates /etc/nginx/templates/
+COPY --from=build-env /app/frontend/nginx/templates /etc/nginx/templates/
 
 ENV NGINX_PORT=80 \
   NGINX_SERVER_NAME=docker-frontend \

@@ -30,3 +30,7 @@
 /target
 LICENSE
 README.md
+
+# Local generated files
+**/dist
+**/app.css
