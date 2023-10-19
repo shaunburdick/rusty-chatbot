@@ -1,0 +1,225 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <!--
+        Welcome to Tailwind Play, the official Tailwind CSS playground!
+
+        Everything here works just like it does when you're running Tailwind locally
+        with a real build pipeline. You can customize your config file, use features
+        like `@apply`, or even add third-party plugins.
+
+        Feel free to play with this example if you're just learning, or trash it and
+        start from scratch if you know enough to be dangerous. Have fun!
+        -->
+        <div class="flex flex-row h-full">
+            <!-- Sidebar -->
+            <div class="basis-1/4 flex flex-col bg-slate-700 text-white">
+                <!-- Title -->
+                <div class="fixed top-0 h-32 w-3/12 p-5 flex justify-center items-center border-b bg-slate-700">
+                    <h2 class="text-2xl">Conversations</h2>
+                </div>
+
+                <!-- Conversation List -->
+                <div class="pt-32 pb-24 h-screen overflow-y-auto">
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                    <!-- Conversation List Item -->
+                    <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+                        <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                        VI
+                        </div>
+                        <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+                    </div>
+                </div>
+
+                <!-- New Conversation Button -->
+                <div class="fixed bottom-0 p-5">
+                    <span class="p-3 text-3xl rounded-2xl hover:cursor-pointer bg-green-700 hover:bg-green-600 ">
+                        +
+                    </span>
+                </div>
+            </div>
+
+            <!-- Conversation -->
+            <div class="basis-3/4 flex flex-col border-zinc-700 bg-zinc-900 text-white">
+                <!-- Conversation Header -->
+                <div class="fixed h-32 w-9/12 top-0 flex flex-col justify-center items-center p-5 border-b bg-zinc-800">
+                <!-- Conversation Info -->
+                <div class="">
+                    <h2 class="text-2xl">{conversation.name}</h2>
+                </div>
+                <!-- Voice Info -->
+                <div class="">
+                    <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+                    VI
+                    </div>
+                    <span>{voice.name}</span>
+                </div>
+                </div>
+
+                <!-- Conversation Messages -->
+                <div class="pt-36 pb-24 h-screen flex flex-col overflow-y-auto p-5">
+                <!-- User Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    No! You!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                    No! You!
+                </div>
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    No! It's You!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                NO! It's you!!
+                </div>
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    NO!!! IT'S YOU!!!!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                    Fine...
+                </div>
+                <!-- User Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    No! You!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                    No! You!
+                </div>
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    How babby get there?
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                NO! It's you!!
+                </div>
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    NO!!! IT'S YOU!!!!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                    Fine...
+                </div>
+                <!-- User Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    No! You!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                    No! You!
+                </div>
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    How babby get there?
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                NO! It's you!!
+                </div>
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    NO!!! IT'S YOU!!!!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                    Fine...
+                </div>
+                <!-- User Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    No! You!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                    No! You!
+                </div>
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    How babby get there?
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                NO! It's you!!
+                </div>
+                <div class="max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500 text-white">
+                    NO!!! IT'S YOU!!!!
+                </div>
+                <!-- Voice Message -->
+                <div class="max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700 text-white">
+                    Fine...
+                </div>
+                </div>
+
+                <!-- Conversation Input -->
+                <div class="h-24 w-9/12 fixed bottom-0 flex justify-center items-center p-5 border-t bg-zinc-900 border-zinc-700">
+                <form class="w-full flex justify-center items-center gap-4">
+                    <input class="w-2/3 p-4 border rounded-full input-field bg-zinc-700 border-zinc-700 text-white" type="text" placeholder="Ask a question!">
+                    <button class="h-full p-4 rounded-full cursor-pointer bg-green-700 hover:bg-green-600 text-white" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                    </svg>
+                    </button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
