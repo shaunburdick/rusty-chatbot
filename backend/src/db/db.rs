@@ -129,7 +129,6 @@ impl DB {
                 b.push_bind(&voice.created_at);
             });
 
-            dbg!(bulk_voice_query.sql());
             let query = bulk_voice_query.build();
 
             query.execute(&mut *connection).await?;

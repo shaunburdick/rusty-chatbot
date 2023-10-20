@@ -14,4 +14,8 @@ COPY --from=build-env /app/target/release/backend /
 
 EXPOSE 3000
 
+ENV DATABASE_URL= \
+    HTTP_HOST= \
+    HTTP_PORT=
+
 CMD [ "./backend" ]

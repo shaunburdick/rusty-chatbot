@@ -9,6 +9,7 @@ use api::routes::init_routes;
 use db::db::DB;
 use dotenv::dotenv;
 use env_logger::Env;
+use log::info;
 
 /// A simple hello world endpoint
 ///
@@ -22,10 +23,27 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
-    let db = DB::new("sqlite::memory:").await.unwrap();
+    let database_url =  match env::var("DATABASE_URL") {
+        Ok(s) if s.len() > 0 => s,
+        Ok(_) | Err(_) => "sqlite::memory:".to_string(),
+    };
+
+    let http_host = match env::var("HTTP_HOST") {
+        Ok(s) if s.len() > 0 => s,
+        Ok(_) | Err(_) => "0.0.0.0".to_string(),
+    };
+
+    let http_port = match env::var("HTTP_PORT") {
+        Ok(s) if s.len() > 0 => s.parse::<u16>(),
+        Ok(_) | Err(_) => Ok(3000),
+    }.unwrap_or(3000);
+
+    info!("Connecting to database: {}", database_url);
+    let db = DB::new(&database_url).await.unwrap();
     db.assert_schema().await.unwrap();
     db.init().await.unwrap();
 
+    info!("Server starting. Listening on: http://{}:{}", http_host, http_port);
     HttpServer::new(move || {
         App::new()
             .wrap(DefaultHeaders::new().add(("app-version", env!("CARGO_PKG_VERSION"))))
@@ -34,10 +52,12 @@ async fn main() -> std::io::Result<()> {
             .configure(init_routes)
             .service(hello)
     })
-    .workers(4)
-    .bind(("0.0.0.0", 3000))?
+    .bind((http_host.clone(), http_port.clone()))?
     .run()
-    .await
+    .await?;
+
+
+    Ok(())
 }
 
 #[cfg(test)]
