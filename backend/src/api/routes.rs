@@ -3,7 +3,7 @@ use actix_web::{get, post, put, web, HttpResponse, delete};
 use models::{Voice, Conversation, Message};
 use serde::Deserialize;
 
-use crate::db::db::DB;
+use crate::db::DB;
 use crate::api::error::HttpError;
 use crate::api::response::JsonApiResponse;
 

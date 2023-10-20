@@ -6,3 +6,7 @@ port = 3001
 stage = "pre_build"
 command = "tailwindcss"
 command_arguments = ["-i", "input.css", "-o", "app.css"]
+
+[[proxy]]
+rewrite = "/api/"
+backend = "http://localhost:3000/"

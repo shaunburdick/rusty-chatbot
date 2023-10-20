@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use llm::{models::Llama, ModelParameters, LoadError};
 
 /// LLM Wrapper
-pub struct LLM {
+pub struct Llm {
     model: Llama
 }
 
-impl LLM {
+impl Llm {
     /// Create a new instance of the LLM
     ///
     /// Arguments:

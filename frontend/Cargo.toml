@@ -10,4 +10,5 @@ yew = { version = "0.21.0", features = ["csr"] }
 models = { path = "../models" }
 chrono = "0.4.31"
 uuid = { version = "1.5.0", features = ["v4"] }
+yewdux = "0.9.4"
 

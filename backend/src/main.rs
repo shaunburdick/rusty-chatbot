@@ -6,7 +6,7 @@ use std::env;
 
 use actix_web::{get, HttpServer, App, Responder, HttpResponse, middleware::{Logger, DefaultHeaders}, web};
 use api::routes::init_routes;
-use db::db::DB;
+use db::DB;
 use dotenv::dotenv;
 use env_logger::Env;
 use log::info;

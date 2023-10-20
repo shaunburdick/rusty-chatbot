@@ -211,22 +211,22 @@ impl DB {
     ///
     /// Arguments:
     /// - voice_id: The id of the voice to "delete"
-    pub async fn delete_voice(&self, voice_id: &String) -> Result<bool, Error> {
-        let mut connection = self.pool.acquire().await?;
+    // pub async fn delete_voice(&self, voice_id: &String) -> Result<bool, Error> {
+    //     let mut connection = self.pool.acquire().await?;
 
-        let rows_affected = sqlx::query(r#"
-            UPDATE `voice`
-            SET `deleted_at` = ?1
-            WHERE `id` = ?2
-        "#)
-        .bind(Utc::now().timestamp())
-        .bind(voice_id)
-        .execute(&mut *connection)
-        .await?
-        .rows_affected();
+    //     let rows_affected = sqlx::query(r#"
+    //         UPDATE `voice`
+    //         SET `deleted_at` = ?1
+    //         WHERE `id` = ?2
+    //     "#)
+    //     .bind(Utc::now().timestamp())
+    //     .bind(voice_id)
+    //     .execute(&mut *connection)
+    //     .await?
+    //     .rows_affected();
 
-        Ok(rows_affected == 1)
-    }
+    //     Ok(rows_affected == 1)
+    // }
 
     /// Fetches conversations from database
     ///
@@ -399,22 +399,22 @@ impl DB {
     ///
     /// Arguments:
     /// - message_id: The id of the message to "delete"
-    pub async fn delete_message(&self, message_id: &String) -> Result<bool, Error> {
-        let mut connection = self.pool.acquire().await?;
+    // pub async fn delete_message(&self, message_id: &String) -> Result<bool, Error> {
+    //     let mut connection = self.pool.acquire().await?;
 
-        let rows_affected = sqlx::query(r#"
-            UPDATE `message`
-            SET `deleted_at` = ?1
-            WHERE `id` = ?2
-        "#)
-        .bind(Utc::now().timestamp())
-        .bind(message_id)
-        .execute(&mut *connection)
-        .await?
-        .rows_affected();
+    //     let rows_affected = sqlx::query(r#"
+    //         UPDATE `message`
+    //         SET `deleted_at` = ?1
+    //         WHERE `id` = ?2
+    //     "#)
+    //     .bind(Utc::now().timestamp())
+    //     .bind(message_id)
+    //     .execute(&mut *connection)
+    //     .await?
+    //     .rows_affected();
 
-        Ok(rows_affected == 1)
-    }
+    //     Ok(rows_affected == 1)
+    // }
 
     /// Set the deleted_at timestamp for all messages in a conversation
     ///
