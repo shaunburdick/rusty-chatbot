@@ -2,7 +2,8 @@ use std::str::FromStr;
 
 use chrono::Utc;
 use models::{Voice, Conversation, Message, Author};
-use sqlx::{sqlite::{SqlitePool, SqliteRow}, Error, Row};
+use sqlx::{sqlite::{SqlitePool, SqliteRow}, Error, Row, QueryBuilder};
+use uuid::Uuid;
 
 #[derive(Clone)]
 pub struct DB {
@@ -77,6 +78,62 @@ impl DB {
         let mut connection = self.pool.acquire().await?;
 
         sqlx::query(schema).execute(&mut *connection).await?;
+
+        Ok(())
+    }
+
+    /// Initializes the database with the following:
+    /// - Inserts initial voices if the table is empty
+    pub async fn init(&self) -> Result<(), Error> {
+        let mut connection = self.pool.acquire().await?;
+
+        let voice_count_query = r#"
+            SELECT COUNT(*) as count
+            FROM `voice`
+        "#;
+
+        let voice_count = sqlx::query(voice_count_query)
+            .fetch_one(&mut *connection)
+            .await?
+            .get::<i64, &str>("count");
+
+        if voice_count == 0 {
+            let initial_voices = vec![
+                Voice {
+                    id: Uuid::new_v4().to_string(),
+                    name: "Shaun Burdick".to_string(),
+                    description: "The developer of this tool".to_string(),
+                    prefix: "A software developer; Learning Rust; Too busy to focus on you;".to_string(),
+                    created_at: Utc::now().timestamp_micros(),
+                    deleted_at: None
+                },
+                Voice {
+                    id: Uuid::new_v4().to_string(),
+                    name: "Gwen Burdick".to_string(),
+                    description: "My dog".to_string(),
+                    prefix: "A dog; Just discovered the English language; Learned how to type; Just happy to be here;".to_string(),
+                    created_at: Utc::now().timestamp_micros(),
+                    deleted_at: None
+                },
+            ];
+
+            let mut bulk_voice_query = QueryBuilder::new(r#"
+                INSERT INTO voice (id, name, description, prefix, created_at)
+            "#);
+
+            bulk_voice_query.push_values(initial_voices.iter(), |mut b, voice| {
+                b.push_bind(&voice.id);
+                b.push_bind(&voice.name);
+                b.push_bind(&voice.description);
+                b.push_bind(&voice.prefix);
+                b.push_bind(&voice.created_at);
+            });
+
+            dbg!(bulk_voice_query.sql());
+            let query = bulk_voice_query.build();
+
+            query.execute(&mut *connection).await?;
+        }
 
         Ok(())
     }
@@ -433,7 +490,6 @@ mod tests {
     use super::*;
 
     use chrono::Utc;
-    use uuid::Uuid;
 
     #[sqlx::test]
     async fn test_db_assert_schema() {
@@ -482,6 +538,39 @@ mod tests {
         // Compare tables to the expected list
         assert_eq!(tables.len(), 3);
         // assert_eq!(tables, vec![("voice",), ("conversation",), ("messages",)]);
+    }
+
+    #[sqlx::test]
+    async fn test_db_init() {
+        // create instance and assert schema
+        let db = DB::new("sqlite::memory:").await.unwrap();
+        db.assert_schema().await.unwrap();
+
+        let mut connection = db.pool.acquire().await.unwrap();
+
+        let voice_count_query = r#"
+            SELECT COUNT(*) as count
+            FROM `voice`
+        "#;
+
+        let voice_count = sqlx::query(voice_count_query)
+            .fetch_one(&mut *connection)
+            .await.unwrap()
+            .get::<i64, &str>("count");
+
+        // verify table is empty
+        assert_eq!(voice_count, 0);
+
+        // initialize db
+        db.init().await.unwrap();
+
+        let new_voice_count = sqlx::query(voice_count_query)
+            .fetch_one(&mut *connection)
+            .await.unwrap()
+            .get::<i64, &str>("count");
+
+        // verify table is populated now
+        assert!(new_voice_count > 0);
     }
 
     #[sqlx::test]
