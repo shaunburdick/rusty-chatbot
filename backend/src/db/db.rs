@@ -126,7 +126,7 @@ impl DB {
                 b.push_bind(&voice.name);
                 b.push_bind(&voice.description);
                 b.push_bind(&voice.prefix);
-                b.push_bind(&voice.created_at);
+                b.push_bind(voice.created_at);
             });
 
             let query = bulk_voice_query.build();
@@ -142,11 +142,11 @@ impl DB {
     /// Arguments:
     /// - deleted: include deleted voices
     pub async fn get_voices(&self, deleted: bool) -> Result<Vec<Voice>, Error> {
-        let sql = String::from(format!(r#"
+        let sql = format!(r#"
             SELECT `id`, `name`, `description`, `prefix`, `created_at`, `deleted_at`
             FROM `voice`
             WHERE `deleted_at` IS {}
-        "#, if deleted { "NOT NULL"} else { "NULL" }));
+        "#, if deleted { "NOT NULL"} else { "NULL" });
 
         let mut connection = self.pool.acquire().await?;
         let rows = sqlx::query(&sql)
@@ -171,7 +171,7 @@ impl DB {
         let mut connection = self.pool.acquire().await?;
 
         sqlx::query(&sql)
-            .bind(&id)
+            .bind(id)
             .map(|row| DB::row_to_voice(&row))
             .fetch_one(&mut *connection)
             .await
@@ -198,8 +198,8 @@ impl DB {
         .bind(&voice.name)
         .bind(&voice.description)
         .bind(&voice.prefix)
-        .bind(&voice.created_at)
-        .bind(&voice.deleted_at)
+        .bind(voice.created_at)
+        .bind(voice.deleted_at)
         .execute(&mut *connection)
         .await?
         .rows_affected();
@@ -234,16 +234,16 @@ impl DB {
     /// - user_id: the id of the user in the conversation
     /// - deleted: include deleted voices
     pub async fn get_conversations(&self, user_id: &String, deleted: bool) -> Result<Vec<Conversation>, Error> {
-        let sql = String::from(format!(r#"
+        let sql = format!(r#"
             SELECT `id`, `user_id`, `name`, `voice_id`, `created_at`, `deleted_at`
             FROM `conversation`
             WHERE `deleted_at` IS {}
                 AND `user_id` = ?
-        "#, if deleted { "NOT NULL"} else { "NULL" }));
+        "#, if deleted { "NOT NULL"} else { "NULL" });
 
         let mut connection = self.pool.acquire().await?;
         let rows = sqlx::query(&sql)
-            .bind(&user_id)
+            .bind(user_id)
             .map(|row| DB::row_to_conversation(&row))
             .fetch_all(&mut *connection)
             .await?;
@@ -265,7 +265,7 @@ impl DB {
         let mut connection = self.pool.acquire().await?;
 
         sqlx::query(&sql)
-            .bind(&id)
+            .bind(id)
             .map(|row| DB::row_to_conversation(&row))
             .fetch_one(&mut *connection)
             .await
@@ -292,8 +292,8 @@ impl DB {
         .bind(&conversation.user_id)
         .bind(&conversation.name)
         .bind(&conversation.voice_id)
-        .bind(&conversation.created_at)
-        .bind(&conversation.deleted_at)
+        .bind(conversation.created_at)
+        .bind(conversation.deleted_at)
         .execute(&mut *connection)
         .await?
         .rows_affected();
@@ -328,16 +328,16 @@ impl DB {
     /// - conversation_id: the id of the user in the conversation
     /// - deleted: include deleted voices
     pub async fn get_messages(&self, conversation_id: &String, deleted: bool) -> Result<Vec<Message>, Error> {
-        let sql = String::from(format!(r#"
+        let sql = format!(r#"
             SELECT `id`, `conversation_id`, `author`, `content`, `created_at`, `deleted_at`
             FROM `message`
             WHERE `deleted_at` IS {}
                 AND `conversation_id` = ?
-        "#, if deleted { "NOT NULL"} else { "NULL" }));
+        "#, if deleted { "NOT NULL"} else { "NULL" });
 
         let mut connection = self.pool.acquire().await?;
         let rows = sqlx::query(&sql)
-            .bind(&conversation_id)
+            .bind(conversation_id)
             .map(|row| DB::row_to_message(&row))
             .fetch_all(&mut *connection)
             .await?;
@@ -359,7 +359,7 @@ impl DB {
         let mut connection = self.pool.acquire().await?;
 
         sqlx::query(&sql)
-            .bind(&id)
+            .bind(id)
             .map(|row| DB::row_to_message(&row))
             .fetch_one(&mut *connection)
             .await
@@ -384,10 +384,10 @@ impl DB {
         "#)
         .bind(&message.id)
         .bind(&message.conversation_id)
-        .bind(&message.author.to_string())
+        .bind(message.author.to_string())
         .bind(&message.content)
-        .bind(&message.created_at)
-        .bind(&message.deleted_at)
+        .bind(message.created_at)
+        .bind(message.deleted_at)
         .execute(&mut *connection)
         .await?
         .rows_affected();

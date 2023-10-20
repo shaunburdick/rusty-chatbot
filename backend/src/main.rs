@@ -24,17 +24,17 @@ async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(Env::default().default_filter_or("info"));
 
     let database_url =  match env::var("DATABASE_URL") {
-        Ok(s) if s.len() > 0 => s,
+        Ok(s) if !s.is_empty() => s,
         Ok(_) | Err(_) => "sqlite::memory:".to_string(),
     };
 
     let http_host = match env::var("HTTP_HOST") {
-        Ok(s) if s.len() > 0 => s,
+        Ok(s) if !s.is_empty() => s,
         Ok(_) | Err(_) => "0.0.0.0".to_string(),
     };
 
     let http_port = match env::var("HTTP_PORT") {
-        Ok(s) if s.len() > 0 => s.parse::<u16>(),
+        Ok(s) if !s.is_empty() => s.parse::<u16>(),
         Ok(_) | Err(_) => Ok(3000),
     }.unwrap_or(3000);
 
@@ -52,7 +52,7 @@ async fn main() -> std::io::Result<()> {
             .configure(init_routes)
             .service(hello)
     })
-    .bind((http_host.clone(), http_port.clone()))?
+    .bind((http_host, http_port))?
     .run()
     .await?;
 
