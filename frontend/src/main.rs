@@ -1,8 +1,9 @@
 mod app;
 mod store;
 
+use leptos::*;
 use app::App;
 
 fn main() {
-    yew::Renderer::<App>::new().render();
+    mount_to_body(|| view! { <App /> })
 }

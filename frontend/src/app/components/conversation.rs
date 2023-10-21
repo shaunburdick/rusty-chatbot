@@ -2,15 +2,15 @@ use std::vec;
 
 use chrono::Utc;
 use uuid::Uuid;
-use yew::prelude::*;
+use leptos::{component, IntoView, view};
 
 use models::{Author, Conversation, Voice, Message};
 
 const MESSAGE_USER_STYLE: &str = "max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500";
 const MESSAGE_VOICE_STYLE: &str = "max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700";
 
-#[function_component]
-pub fn ConversationDisplay() -> Html {
+#[component]
+pub fn ConversationDisplay() -> impl IntoView {
     let voice = Voice {
         id: Uuid::new_v4().to_string(),
         name: "Shaun".to_string(),
@@ -48,7 +48,7 @@ pub fn ConversationDisplay() -> Html {
         }
     ];
 
-    html! {
+    view! {
         // <!-- Conversation -->
         <div class="basis-3/4 flex flex-col border-zinc-700 bg-zinc-900 text-white">
             // <!-- Conversation Header -->
@@ -74,12 +74,12 @@ pub fn ConversationDisplay() -> Html {
                             Author::User => MESSAGE_USER_STYLE,
                             Author::Voice => MESSAGE_VOICE_STYLE,
                         };
-                        html! {
+                        view! {
                             <div class={style}>
                                {msg.content}
                             </div>
                         }
-                    }).collect::<Html>()
+                    }).collect::<Vec<_>>()
                 }
             </div>
 

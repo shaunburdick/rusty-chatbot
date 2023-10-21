@@ -6,11 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-yew = { version = "0.21.0", features = ["csr"] }
 models = { path = "../models" }
 chrono = "0.4.31"
 uuid = { version = "1.5.0", features = ["v4"] }
-yewdux = "0.9.4"
 reqwest = { version = "0.11.22", features = ["serde_json"] }
 serde = "1.0.189"
+leptos = { version = "0.5.1", features = ["csr"] }
 

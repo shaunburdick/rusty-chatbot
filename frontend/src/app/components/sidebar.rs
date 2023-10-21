@@ -1,12 +1,12 @@
 use std::vec;
 
 use uuid::Uuid;
-use yew::prelude::*;
+use leptos::{component, IntoView, view};
 
 use models::{Conversation, Voice};
 
-#[function_component]
-pub fn SidebarDisplay() -> Html {
+#[component]
+pub fn SidebarDisplay() -> impl IntoView {
     let voices = vec![
             Voice {
             id: Uuid::new_v4().to_string(),
@@ -45,7 +45,7 @@ pub fn SidebarDisplay() -> Html {
         },
     ];
 
-    html! {
+    view! {
         // <!-- Sidebar -->
         <div class="basis-1/4 flex flex-col bg-slate-700 text-white">
             // <!-- Title -->
@@ -58,7 +58,7 @@ pub fn SidebarDisplay() -> Html {
                 {
                     conversations.into_iter().map(|conv| {
                         let voice = voices.first().unwrap();
-                        html! {
+                        view! {
                             // <!-- Conversation List Item -->
                             <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
                                 <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
@@ -67,7 +67,7 @@ pub fn SidebarDisplay() -> Html {
                                 <p class="text-ellipsis overflow-hidden">{conv.name}</p>
                             </div>
                         }
-                    }).collect::<Html>()
+                    }).collect::<Vec<_>>()
                 }
 
             </div>

@@ -1,10 +1,7 @@
 mod components;
-use super::store::ChatStore;
 
-use models::Voice;
+use leptos::{component, IntoView, view};
 use serde::Deserialize;
-use yew::prelude::*;
-use yewdux::prelude::*;
 
 use components::{conversation::ConversationDisplay, sidebar::SidebarDisplay};
 
@@ -19,11 +16,9 @@ pub struct JsonApiResponse<T> {
     pub errors: Option<Vec<T>>,
 }
 
-#[function_component]
-pub fn App() -> Html {
-    let (store, dispatch) = use_store::<ChatStore>();
-
-    html! {
+#[component]
+pub fn App() -> impl IntoView {
+    view! {
         <div class="flex flex-row h-full">
             <SidebarDisplay />
             <ConversationDisplay />
