@@ -62,7 +62,7 @@ pub fn SidebarDisplay() -> Html {
                             // <!-- Conversation List Item -->
                             <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
                                 <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
-                                {Voice::initials(&voice)}
+                                {Voice::initials(voice)}
                                 </div>
                                 <p class="text-ellipsis overflow-hidden">{conv.name}</p>
                             </div>

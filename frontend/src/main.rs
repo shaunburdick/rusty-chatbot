@@ -1,4 +1,7 @@
-use frontend::app::App;
+mod app;
+mod store;
+
+use app::App;
 
 fn main() {
     yew::Renderer::<App>::new().render();

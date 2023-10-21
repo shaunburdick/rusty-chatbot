@@ -11,4 +11,6 @@ models = { path = "../models" }
 chrono = "0.4.31"
 uuid = { version = "1.5.0", features = ["v4"] }
 yewdux = "0.9.4"
+reqwest = { version = "0.11.22", features = ["serde_json"] }
+serde = "1.0.189"
 
