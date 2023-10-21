@@ -6,6 +6,22 @@ use leptos::{component, IntoView, view};
 use models::{Conversation, Voice};
 
 #[component]
+pub fn ConversationItem(
+    conversation: Conversation,
+    voice: Voice
+) -> impl IntoView {
+    view! {
+        // <!-- Conversation List Item -->
+        <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
+            <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
+            {Voice::initials(&voice)}
+            </div>
+            <p class="text-ellipsis overflow-hidden">{conversation.name}</p>
+        </div>
+    }
+}
+
+#[component]
 pub fn SidebarDisplay() -> impl IntoView {
     let voices = vec![
             Voice {
@@ -56,16 +72,10 @@ pub fn SidebarDisplay() -> impl IntoView {
             // <!-- Conversation List -->
             <div class="pt-32 pb-24 h-screen overflow-y-auto">
                 {
-                    conversations.into_iter().map(|conv| {
+                    conversations.into_iter().map(|conversation| {
                         let voice = voices.first().unwrap();
                         view! {
-                            // <!-- Conversation List Item -->
-                            <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
-                                <div class="w-11 inline-flex p-2 mr-1 rounded-full justify-center font-bold border-2 bg-green-500">
-                                {Voice::initials(voice)}
-                                </div>
-                                <p class="text-ellipsis overflow-hidden">{conv.name}</p>
-                            </div>
+                            <ConversationItem conversation voice=voice.clone() />
                         }
                     }).collect::<Vec<_>>()
                 }

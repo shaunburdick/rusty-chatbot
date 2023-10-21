@@ -10,6 +10,21 @@ const MESSAGE_USER_STYLE: &str = "max-w-md p-4 mb-5 rounded-lg self-end bg-blue-
 const MESSAGE_VOICE_STYLE: &str = "max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700";
 
 #[component]
+pub fn MessageItem(
+    message: Message,
+) -> impl IntoView {
+    let style = match message.author {
+        Author::User => MESSAGE_USER_STYLE,
+        Author::Voice => MESSAGE_VOICE_STYLE,
+    };
+    view! {
+        <div class={style}>
+            {message.content}
+        </div>
+    }
+}
+
+#[component]
 pub fn ConversationDisplay() -> impl IntoView {
     let voice = Voice {
         id: Uuid::new_v4().to_string(),
@@ -69,15 +84,9 @@ pub fn ConversationDisplay() -> impl IntoView {
             // <!-- Conversation Messages -->
             <div class="pt-36 pb-24 h-screen flex flex-col overflow-y-auto p-5">
                 {
-                    messages.into_iter().map(|msg| {
-                        let style = match msg.author {
-                            Author::User => MESSAGE_USER_STYLE,
-                            Author::Voice => MESSAGE_VOICE_STYLE,
-                        };
+                    messages.into_iter().map(|message| {
                         view! {
-                            <div class={style}>
-                               {msg.content}
-                            </div>
+                            <MessageItem message />
                         }
                     }).collect::<Vec<_>>()
                 }
