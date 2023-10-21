@@ -1,11 +1,10 @@
 use actix_web::http::StatusCode;
 use actix_web::{get, post, put, web, HttpResponse, delete};
-use models::{Voice, Conversation, Message};
+use models::{Voice, Conversation, Message, JsonApiResponse};
 use serde::Deserialize;
 
 use crate::db::DB;
 use crate::api::error::HttpError;
-use crate::api::response::JsonApiResponse;
 
 #[get("/voices")]
 async fn voices_find_all(db: web::Data<DB>) -> Result<HttpResponse, HttpError> {

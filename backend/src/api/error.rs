@@ -3,7 +3,7 @@ use serde::Deserialize;
 use std::fmt;
 use sqlx::Error as SqlxError;
 
-use super::response::JsonApiResponse;
+use models::JsonApiResponse;
 
 #[derive(Debug, Deserialize)]
 pub struct HttpError {
