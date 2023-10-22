@@ -22,7 +22,7 @@ impl<T> JsonApiResponse<T> {
         Self {
             data: Some(data),
             message: message.unwrap_or("OK".to_string()),
-            errors: None
+            errors: None,
         }
     }
 

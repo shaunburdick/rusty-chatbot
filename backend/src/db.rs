@@ -1,8 +1,11 @@
 use std::str::FromStr;
 
 use chrono::Utc;
-use models::{Voice, Conversation, Message, Author};
-use sqlx::{sqlite::{SqlitePool, SqliteRow}, Error, Row, QueryBuilder};
+use models::{Author, Conversation, Message, Voice};
+use sqlx::{
+    sqlite::{SqlitePool, SqliteRow},
+    Error, QueryBuilder, Row,
+};
 use uuid::Uuid;
 
 #[derive(Clone)]
@@ -117,9 +120,11 @@ impl DB {
                 },
             ];
 
-            let mut bulk_voice_query = QueryBuilder::new(r#"
+            let mut bulk_voice_query = QueryBuilder::new(
+                r#"
                 INSERT INTO voice (id, name, description, prefix, created_at)
-            "#);
+            "#,
+            );
 
             bulk_voice_query.push_values(initial_voices.iter(), |mut b, voice| {
                 b.push_bind(&voice.id);
@@ -142,11 +147,14 @@ impl DB {
     /// Arguments:
     /// - deleted: include deleted voices
     pub async fn get_voices(&self, deleted: bool) -> Result<Vec<Voice>, Error> {
-        let sql = format!(r#"
+        let sql = format!(
+            r#"
             SELECT `id`, `name`, `description`, `prefix`, `created_at`, `deleted_at`
             FROM `voice`
             WHERE `deleted_at` IS {}
-        "#, if deleted { "NOT NULL"} else { "NULL" });
+        "#,
+            if deleted { "NOT NULL" } else { "NULL" }
+        );
 
         let mut connection = self.pool.acquire().await?;
         let rows = sqlx::query(&sql)
@@ -162,11 +170,13 @@ impl DB {
     /// Arguments:
     /// - id: the id of the voice
     pub async fn get_voice(&self, id: &String) -> Result<Voice, Error> {
-        let sql = String::from(r#"
+        let sql = String::from(
+            r#"
             SELECT `id`, `name`, `description`, `prefix`, `created_at`, `deleted_at`
             FROM `voice`
             WHERE `id` = ?
-        "#);
+        "#,
+        );
 
         let mut connection = self.pool.acquire().await?;
 
@@ -184,7 +194,8 @@ impl DB {
     pub async fn save_voice(&self, voice: &Voice) -> Result<bool, Error> {
         let mut connection = self.pool.acquire().await?;
 
-        let rows_affected = sqlx::query(r#"
+        let rows_affected = sqlx::query(
+            r#"
             INSERT INTO `voice` (id, name, description, prefix, created_at, deleted_at)
             VALUES (?1, ?2, ?3, ?4, ?5, ?6)
             ON CONFLICT (id)
@@ -193,7 +204,8 @@ impl DB {
                 description = excluded.description,
                 prefix = excluded.prefix,
                 deleted_at = excluded.deleted_at
-        "#)
+        "#,
+        )
         .bind(&voice.id)
         .bind(&voice.name)
         .bind(&voice.description)
@@ -233,13 +245,20 @@ impl DB {
     /// Arguments:
     /// - user_id: the id of the user in the conversation
     /// - deleted: include deleted voices
-    pub async fn get_conversations(&self, user_id: &String, deleted: bool) -> Result<Vec<Conversation>, Error> {
-        let sql = format!(r#"
+    pub async fn get_conversations(
+        &self,
+        user_id: &String,
+        deleted: bool,
+    ) -> Result<Vec<Conversation>, Error> {
+        let sql = format!(
+            r#"
             SELECT `id`, `user_id`, `name`, `voice_id`, `created_at`, `deleted_at`
             FROM `conversation`
             WHERE `deleted_at` IS {}
                 AND `user_id` = ?
-        "#, if deleted { "NOT NULL"} else { "NULL" });
+        "#,
+            if deleted { "NOT NULL" } else { "NULL" }
+        );
 
         let mut connection = self.pool.acquire().await?;
         let rows = sqlx::query(&sql)
@@ -256,11 +275,13 @@ impl DB {
     /// Arguments:
     /// - id: the id of the voice
     pub async fn get_conversation(&self, id: &String) -> Result<Conversation, Error> {
-        let sql = String::from(r#"
+        let sql = String::from(
+            r#"
             SELECT `id`, `user_id`, `name`, `voice_id`, `created_at`, `deleted_at`
             FROM `conversation`
             WHERE `id` = ?
-        "#);
+        "#,
+        );
 
         let mut connection = self.pool.acquire().await?;
 
@@ -278,7 +299,8 @@ impl DB {
     pub async fn save_conversation(&self, conversation: &Conversation) -> Result<bool, Error> {
         let mut connection = self.pool.acquire().await?;
 
-        let rows_affected = sqlx::query(r#"
+        let rows_affected = sqlx::query(
+            r#"
             INSERT INTO `conversation` (id, user_id, name, voice_id, created_at, deleted_at)
             VALUES (?1, ?2, ?3, ?4, ?5, ?6)
             ON CONFLICT (id)
@@ -287,7 +309,8 @@ impl DB {
                 name = excluded.name,
                 voice_id = excluded.voice_id,
                 deleted_at = excluded.deleted_at
-        "#)
+        "#,
+        )
         .bind(&conversation.id)
         .bind(&conversation.user_id)
         .bind(&conversation.name)
@@ -308,11 +331,13 @@ impl DB {
     pub async fn delete_conversation(&self, conversation_id: &String) -> Result<bool, Error> {
         let mut connection = self.pool.acquire().await?;
 
-        let rows_affected = sqlx::query(r#"
+        let rows_affected = sqlx::query(
+            r#"
             UPDATE `conversation`
             SET `deleted_at` = ?1
             WHERE `id` = ?2
-        "#)
+        "#,
+        )
         .bind(Utc::now().timestamp())
         .bind(conversation_id)
         .execute(&mut *connection)
@@ -327,13 +352,20 @@ impl DB {
     /// Arguments:
     /// - conversation_id: the id of the user in the conversation
     /// - deleted: include deleted voices
-    pub async fn get_messages(&self, conversation_id: &String, deleted: bool) -> Result<Vec<Message>, Error> {
-        let sql = format!(r#"
+    pub async fn get_messages(
+        &self,
+        conversation_id: &String,
+        deleted: bool,
+    ) -> Result<Vec<Message>, Error> {
+        let sql = format!(
+            r#"
             SELECT `id`, `conversation_id`, `author`, `content`, `created_at`, `deleted_at`
             FROM `message`
             WHERE `deleted_at` IS {}
                 AND `conversation_id` = ?
-        "#, if deleted { "NOT NULL"} else { "NULL" });
+        "#,
+            if deleted { "NOT NULL" } else { "NULL" }
+        );
 
         let mut connection = self.pool.acquire().await?;
         let rows = sqlx::query(&sql)
@@ -350,11 +382,13 @@ impl DB {
     /// Arguments:
     /// - id: the id of the voice
     pub async fn get_message(&self, id: &String) -> Result<Message, Error> {
-        let sql = String::from(r#"
+        let sql = String::from(
+            r#"
             SELECT `id`, `conversation_id`, `author`, `content`, `created_at`, `deleted_at`
             FROM `message`
             WHERE `id` = ?
-        "#);
+        "#,
+        );
 
         let mut connection = self.pool.acquire().await?;
 
@@ -372,7 +406,8 @@ impl DB {
     pub async fn save_message(&self, message: &Message) -> Result<bool, Error> {
         let mut connection = self.pool.acquire().await?;
 
-        let rows_affected = sqlx::query(r#"
+        let rows_affected = sqlx::query(
+            r#"
             INSERT INTO `message` (id, conversation_id, author, content, created_at, deleted_at)
             VALUES (?1, ?2, ?3, ?4, ?5, ?6)
             ON CONFLICT (id)
@@ -381,7 +416,8 @@ impl DB {
                 author = excluded.author,
                 content = excluded.content,
                 deleted_at = excluded.deleted_at
-        "#)
+        "#,
+        )
         .bind(&message.id)
         .bind(&message.conversation_id)
         .bind(message.author.to_string())
@@ -420,14 +456,19 @@ impl DB {
     ///
     /// Arguments:
     /// - conversation_id: The id of the conversation to "delete" messages for
-    pub async fn delete_messages_by_conversation(&self, conversation_id: &String) -> Result<bool, Error> {
+    pub async fn delete_messages_by_conversation(
+        &self,
+        conversation_id: &String,
+    ) -> Result<bool, Error> {
         let mut connection = self.pool.acquire().await?;
 
-        let rows_affected = sqlx::query(r#"
+        let rows_affected = sqlx::query(
+            r#"
             UPDATE `message`
             SET `deleted_at` = ?1
             WHERE `conversation_id` = ?2
-        "#)
+        "#,
+        )
         .bind(Utc::now().timestamp())
         .bind(conversation_id)
         .execute(&mut *connection)
@@ -436,7 +477,6 @@ impl DB {
 
         Ok(rows_affected == 1)
     }
-
 
     /// Converts an SQLite Row to a Voice
     ///
@@ -449,7 +489,7 @@ impl DB {
             description: row.get::<String, &str>("description"),
             prefix: row.get::<String, &str>("prefix"),
             created_at: row.get::<i64, &str>("created_at"),
-            deleted_at: row.get::<Option<i64>, &str>("deleted_at")
+            deleted_at: row.get::<Option<i64>, &str>("deleted_at"),
         }
     }
 
@@ -464,7 +504,7 @@ impl DB {
             name: row.get::<String, &str>("name"),
             voice_id: row.get::<String, &str>("voice_id"),
             created_at: row.get::<i64, &str>("created_at"),
-            deleted_at: row.get::<Option<i64>, &str>("deleted_at")
+            deleted_at: row.get::<Option<i64>, &str>("deleted_at"),
         }
     }
 
@@ -479,7 +519,7 @@ impl DB {
             author: Author::from_str(&row.get::<String, &str>("author").to_string()).unwrap(),
             content: row.get::<String, &str>("content"),
             created_at: row.get::<i64, &str>("created_at"),
-            deleted_at: row.get::<Option<i64>, &str>("deleted_at")
+            deleted_at: row.get::<Option<i64>, &str>("deleted_at"),
         }
     }
 }
@@ -554,7 +594,8 @@ mod tests {
 
         let voice_count = sqlx::query(voice_count_query)
             .fetch_one(&mut *connection)
-            .await.unwrap()
+            .await
+            .unwrap()
             .get::<i64, &str>("count");
 
         // verify table is empty
@@ -565,7 +606,8 @@ mod tests {
 
         let new_voice_count = sqlx::query(voice_count_query)
             .fetch_one(&mut *connection)
-            .await.unwrap()
+            .await
+            .unwrap()
             .get::<i64, &str>("count");
 
         // verify table is populated now
@@ -582,7 +624,7 @@ mod tests {
         let mut voice = Voice::new(
             "Shaun".to_string(),
             "It's me".to_string(),
-            "I'm boring".to_string()
+            "I'm boring".to_string(),
         );
 
         let res = db.save_voice(&voice).await;
@@ -625,7 +667,7 @@ mod tests {
         let voice = Voice::new(
             "Shaun".to_string(),
             "It's me".to_string(),
-            "I'm boring".to_string()
+            "I'm boring".to_string(),
         );
 
         let voice_res = db.save_voice(&voice).await;
@@ -635,7 +677,7 @@ mod tests {
         let mut conversation = Conversation::new(
             Uuid::new_v4().to_string(),
             "Test Conversation".to_string(),
-            voice.id.clone()
+            voice.id.clone(),
         );
         let conversation_res = db.save_conversation(&conversation).await;
         assert!(conversation_res.unwrap());
@@ -647,7 +689,10 @@ mod tests {
         assert_eq!(fetched_conversation.unwrap(), conversation);
 
         // Grab all the records from the database
-        let conversations = db.get_conversations(&conversation.user_id, false).await.unwrap();
+        let conversations = db
+            .get_conversations(&conversation.user_id, false)
+            .await
+            .unwrap();
 
         // Should be one record
         assert_eq!(conversations.len(), 1);
@@ -659,11 +704,17 @@ mod tests {
         assert!(db.save_conversation(&conversation).await.unwrap());
 
         // It should no longer show up in list of conversations
-        let new_conversations = db.get_conversations(&conversation.user_id, false).await.unwrap();
+        let new_conversations = db
+            .get_conversations(&conversation.user_id, false)
+            .await
+            .unwrap();
         assert_eq!(new_conversations.len(), 0);
 
         // It should show up if you ask for deleted
-        let deleted_conversations = db.get_conversations(&conversation.user_id, true).await.unwrap();
+        let deleted_conversations = db
+            .get_conversations(&conversation.user_id, true)
+            .await
+            .unwrap();
         assert_eq!(deleted_conversations.len(), 1);
     }
 
@@ -677,7 +728,7 @@ mod tests {
         let voice = Voice::new(
             "Shaun".to_string(),
             "It's me".to_string(),
-            "I'm boring".to_string()
+            "I'm boring".to_string(),
         );
 
         let voice_res = db.save_voice(&voice).await;
@@ -687,7 +738,7 @@ mod tests {
         let conversation = Conversation::new(
             Uuid::new_v4().to_string(),
             "Test Conversation".to_string(),
-            voice.id.clone()
+            voice.id.clone(),
         );
         let conversation_res = db.save_conversation(&conversation).await;
         assert!(conversation_res.unwrap());
@@ -696,7 +747,7 @@ mod tests {
         let mut message = Message::new(
             conversation.id.clone(),
             Author::User,
-            "This is a test message".to_string()
+            "This is a test message".to_string(),
         );
         let message_res = db.save_message(&message).await;
         assert!(message_res.unwrap());

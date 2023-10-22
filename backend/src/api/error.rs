@@ -1,7 +1,7 @@
-use actix_web::{ResponseError, HttpResponse, http::StatusCode};
+use actix_web::{http::StatusCode, HttpResponse, ResponseError};
 use serde::Deserialize;
-use std::fmt;
 use sqlx::Error as SqlxError;
+use std::fmt;
 
 use models::JsonApiResponse;
 
@@ -37,9 +37,7 @@ impl From<SqlxError> for HttpError {
         match error {
             SqlxError::Database(err) => HttpError::new(409, err.message().to_string()),
             SqlxError::PoolTimedOut => HttpError::new(408, "DB Pool timed out".to_string()),
-            SqlxError::RowNotFound => {
-                HttpError::new(404, "The record was not found".to_string())
-            }
+            SqlxError::RowNotFound => HttpError::new(404, "The record was not found".to_string()),
             err => HttpError::new(500, format!("Unexpected DB error: {}", err)),
         }
     }

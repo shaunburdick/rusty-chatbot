@@ -1,15 +1,12 @@
 use std::vec;
 
+use leptos::{component, view, IntoView};
 use uuid::Uuid;
-use leptos::{component, IntoView, view};
 
 use models::{Conversation, Voice};
 
 #[component]
-pub fn ConversationItem(
-    conversation: Conversation,
-    voice: Voice
-) -> impl IntoView {
+pub fn ConversationItem(conversation: Conversation, voice: Voice) -> impl IntoView {
     view! {
         // <!-- Conversation List Item -->
         <div class="p-5 border-t border-b cursor-pointer overflow-hidden border-slate-500 hover:bg-slate-600">
@@ -23,16 +20,14 @@ pub fn ConversationItem(
 
 #[component]
 pub fn SidebarDisplay() -> impl IntoView {
-    let voices = vec![
-            Voice {
-            id: Uuid::new_v4().to_string(),
-            name: "Shaun".to_string(),
-            description: "It's Shaun".to_string(),
-            prefix: "He's a programmer".to_string(),
-            created_at: 1234,
-            deleted_at: None
-        },
-    ];
+    let voices = vec![Voice {
+        id: Uuid::new_v4().to_string(),
+        name: "Shaun".to_string(),
+        description: "It's Shaun".to_string(),
+        prefix: "He's a programmer".to_string(),
+        created_at: 1234,
+        deleted_at: None,
+    }];
 
     let conversations = vec![
         Conversation {
@@ -41,7 +36,7 @@ pub fn SidebarDisplay() -> impl IntoView {
             user_id: "1234".to_string(),
             voice_id: voices.first().unwrap().id.clone(),
             created_at: 1234,
-            deleted_at: None
+            deleted_at: None,
         },
         Conversation {
             id: Uuid::new_v4().to_string(),
@@ -49,7 +44,7 @@ pub fn SidebarDisplay() -> impl IntoView {
             user_id: "1234".to_string(),
             voice_id: voices.first().unwrap().id.clone(),
             created_at: 1234,
-            deleted_at: None
+            deleted_at: None,
         },
         Conversation {
             id: Uuid::new_v4().to_string(),
@@ -57,7 +52,7 @@ pub fn SidebarDisplay() -> impl IntoView {
             user_id: "1234".to_string(),
             voice_id: voices.first().unwrap().id.clone(),
             created_at: 1234,
-            deleted_at: None
+            deleted_at: None,
         },
     ];
 

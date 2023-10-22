@@ -1,9 +1,9 @@
 mod components;
 
-use leptos::{component, IntoView, view};
+use leptos::{component, view, IntoView};
 
-use components::{conversation::ConversationDisplay, sidebar::SidebarDisplay};
 use super::store::ChatStore;
+use components::{conversation::ConversationDisplay, sidebar::SidebarDisplay};
 
 #[component]
 pub fn App() -> impl IntoView {

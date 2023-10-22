@@ -1,11 +1,10 @@
-
-use std::collections::HashMap;
-use leptos::{SignalUpdate, SignalGet};
+use leptos::{SignalGet, SignalUpdate};
 use leptos_use::storage::use_storage;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use uuid::Uuid;
 
-use models::{Voice, Conversation, Message};
+use models::{Conversation, Message, Voice};
 
 #[derive(PartialEq, Eq, Serialize, Default, Deserialize, Clone, Debug)]
 pub struct UserConfig {
@@ -26,7 +25,7 @@ impl ChatStore {
             voices: HashMap::new(),
             conversations: HashMap::new(),
             messages: Vec::new(),
-            user_config: UserConfig::default()
+            user_config: UserConfig::default(),
         }
     }
 
@@ -45,13 +44,10 @@ impl ChatStore {
             id: Uuid::new_v4().to_string(),
         };
 
-        let (
-            user_config,
-            update_user_config,
-            _
-        ) = use_storage("rusty_chat_user_config", default_user_config);
+        let (user_config, update_user_config, _) =
+            use_storage("rusty_chat_user_config", default_user_config);
 
-        update_user_config.update(|uc| {uc.id = uc.id.clone()} );
+        update_user_config.update(|uc| uc.id = uc.id.clone());
 
         user_config.get()
     }

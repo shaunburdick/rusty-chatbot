@@ -1,18 +1,16 @@
 use std::vec;
 
 use chrono::Utc;
+use leptos::{component, view, IntoView};
 use uuid::Uuid;
-use leptos::{component, IntoView, view};
 
-use models::{Author, Conversation, Voice, Message};
+use models::{Author, Conversation, Message, Voice};
 
 const MESSAGE_USER_STYLE: &str = "max-w-md p-4 mb-5 rounded-lg self-end bg-blue-500";
 const MESSAGE_VOICE_STYLE: &str = "max-w-md p-4 mb-5 rounded-lg self-start bg-zinc-700";
 
 #[component]
-pub fn MessageItem(
-    message: Message,
-) -> impl IntoView {
+pub fn MessageItem(message: Message) -> impl IntoView {
     let style = match message.author {
         Author::User => MESSAGE_USER_STYLE,
         Author::Voice => MESSAGE_VOICE_STYLE,
@@ -32,7 +30,7 @@ pub fn ConversationDisplay() -> impl IntoView {
         description: "It's Shaun".to_string(),
         prefix: "He's a programmer".to_string(),
         created_at: 1234,
-        deleted_at: None
+        deleted_at: None,
     };
 
     let conversation = Conversation {
@@ -41,7 +39,7 @@ pub fn ConversationDisplay() -> impl IntoView {
         user_id: "1234".to_string(),
         voice_id: voice.id.clone(),
         created_at: 1234,
-        deleted_at: None
+        deleted_at: None,
     };
 
     let messages = vec![
@@ -51,7 +49,7 @@ pub fn ConversationDisplay() -> impl IntoView {
             author: Author::User,
             content: "Hello Bot!".to_string(),
             created_at: Utc::now().timestamp_millis(),
-            deleted_at: None
+            deleted_at: None,
         },
         Message {
             id: Uuid::new_v4().to_string(),
@@ -59,8 +57,8 @@ pub fn ConversationDisplay() -> impl IntoView {
             author: Author::Voice,
             content: "Hello User!".to_string(),
             created_at: Utc::now().timestamp_millis(),
-            deleted_at: None
-        }
+            deleted_at: None,
+        },
     ];
 
     view! {

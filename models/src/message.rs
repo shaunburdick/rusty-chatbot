@@ -10,7 +10,7 @@ use uuid::Uuid;
 
 pub enum Author {
     User,
-    Voice
+    Voice,
 }
 
 impl FromStr for Author {
@@ -24,7 +24,6 @@ impl FromStr for Author {
         }
     }
 }
-
 
 #[derive(PartialEq, Eq, Debug, Clone, Serialize, Deserialize)]
 /// A message is a bit of text as part of the conversation

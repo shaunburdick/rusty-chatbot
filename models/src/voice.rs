@@ -40,7 +40,9 @@ impl Voice {
     /// Generate a set of initials from a voice
     /// Will only generate a 2 character string
     pub fn initials(voice: &Voice) -> String {
-        voice.name.splitn(2, ' ')
+        voice
+            .name
+            .splitn(2, ' ')
             .map(|word| word.chars().nth(0).unwrap_or(' '))
             .collect::<String>()
     }

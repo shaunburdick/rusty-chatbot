@@ -1,10 +1,10 @@
 use std::path::PathBuf;
 
-use llm::{models::Llama, ModelParameters, LoadError};
+use llm::{models::Llama, LoadError, ModelParameters};
 
 /// LLM Wrapper
 pub struct Llm {
-    model: Llama
+    model: Llama,
 }
 
 impl Llm {
@@ -17,11 +17,9 @@ impl Llm {
         let model = llm::load::<Llama>(
             &PathBuf::from(model_path),
             model_config,
-            llm::load_progress_callback_stdout
+            llm::load_progress_callback_stdout,
         )?;
 
-        Ok(Self {
-            model
-        })
+        Ok(Self { model })
     }
 }
