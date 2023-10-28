@@ -1,9 +1,8 @@
-use std::vec;
-
-use leptos::{component, view, IntoView};
-use uuid::Uuid;
+use leptos::{component, use_context, view, IntoView, Resource, SignalGet};
 
 use models::{Conversation, Voice};
+
+use crate::store::ChatStore;
 
 #[component]
 pub fn ConversationItem(conversation: Conversation, voice: Voice) -> impl IntoView {
@@ -20,41 +19,7 @@ pub fn ConversationItem(conversation: Conversation, voice: Voice) -> impl IntoVi
 
 #[component]
 pub fn SidebarDisplay() -> impl IntoView {
-    let voices = vec![Voice {
-        id: Uuid::new_v4().to_string(),
-        name: "Shaun".to_string(),
-        description: "It's Shaun".to_string(),
-        prefix: "He's a programmer".to_string(),
-        created_at: 1234,
-        deleted_at: None,
-    }];
-
-    let conversations = vec![
-        Conversation {
-            id: Uuid::new_v4().to_string(),
-            name: "Conversation 1".to_string(),
-            user_id: "1234".to_string(),
-            voice_id: voices.first().unwrap().id.clone(),
-            created_at: 1234,
-            deleted_at: None,
-        },
-        Conversation {
-            id: Uuid::new_v4().to_string(),
-            name: "Conversation 2".to_string(),
-            user_id: "1234".to_string(),
-            voice_id: voices.first().unwrap().id.clone(),
-            created_at: 1234,
-            deleted_at: None,
-        },
-        Conversation {
-            id: Uuid::new_v4().to_string(),
-            name: "Conversation 3".to_string(),
-            user_id: "1234".to_string(),
-            voice_id: voices.first().unwrap().id.clone(),
-            created_at: 1234,
-            deleted_at: None,
-        },
-    ];
+    let store = use_context::<Resource<(), ChatStore>>().expect("to have store set");
 
     view! {
         // <!-- Sidebar -->
@@ -67,12 +32,17 @@ pub fn SidebarDisplay() -> impl IntoView {
             // <!-- Conversation List -->
             <div class="pt-32 pb-24 h-screen overflow-y-auto">
                 {
-                    conversations.into_iter().map(|conversation| {
-                        let voice = voices.first().unwrap();
-                        view! {
-                            <ConversationItem conversation voice=voice.clone() />
+                    move || match store.get() {
+                        None => view ! { <p>"Loading..."</p> }.into_view(),
+                        Some(s) => {
+                            s.conversations.into_values().map(|conversation| {
+                                let voice = s.voices.get(&conversation.voice_id);
+                                view! {
+                                    <ConversationItem conversation voice=voice.unwrap().clone() />
+                                }
+                            }).collect::<Vec<_>>().into_view()
                         }
-                    }).collect::<Vec<_>>()
+                    }
                 }
 
             </div>
