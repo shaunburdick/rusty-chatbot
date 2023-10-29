@@ -81,6 +81,22 @@ impl ChatStore {
         Ok(conversation_map)
     }
 
+    pub async fn new_conversation(
+        user_id: String,
+        name: String,
+        voice_id: String,
+    ) -> Result<Conversation, Error> {
+        let conversation = Conversation::new(user_id, name, voice_id);
+        let resp = Request::post("/api/conversations")
+            .json(&conversation)?
+            .send()
+            .await?
+            .json::<JsonApiResponse<Conversation>>()
+            .await?;
+
+        Ok(conversation)
+    }
+
     pub async fn get_messages(conversation_id: String) -> Result<Vec<Message>, Error> {
         let resp = Request::get("/api/messages")
             .query([("conversation_id", conversation_id)])
