@@ -1,7 +1,7 @@
 use leptos::{component, use_context, view, IntoView, Resource, SignalGet};
 use leptos_router::Route;
 
-use models::{Author, Voice};
+use models::Voice;
 
 use crate::store::ChatStore;
 
